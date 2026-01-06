@@ -14,7 +14,7 @@ def remove_anagrams(words: List[str]) -> List[str]:
 def main():
     # Read test cases from shared file
     try:
-        testcases_path = Path(__file__).parent.parent.parent / "testcases.json"
+        testcases_path = Path(__file__).parent.parent.parent / "testcases" / "cases.json"
         with open(testcases_path, 'r') as f:
             test_data = json.load(f)
     except Exception as e:

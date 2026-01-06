@@ -30,7 +30,7 @@ fun removeAnagrams(words: Array<String>): List<String> {
 fun main() {
     // Read test cases from shared file
     val testData = try {
-        val jsonString = File("../../testcases.json").readText()
+        val jsonString = File("../../testcases/cases.json").readText()
         Json.decodeFromString<TestData>(jsonString)
     } catch (e: Exception) {
         println("Error reading test cases: ${e.message}")

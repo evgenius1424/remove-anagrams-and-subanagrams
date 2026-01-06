@@ -27,7 +27,7 @@ fn remove_anagrams(words: Vec<String>) -> Vec<String> {
 
 fn main() {
     // Read test cases from shared file
-    let testcases_path = Path::new("../../testcases.json");
+    let testcases_path = Path::new("../../testcases/cases.json");
     let test_data = match fs::read_to_string(testcases_path) {
         Ok(content) => match serde_json::from_str::<TestData>(&content) {
             Ok(data) => data,
