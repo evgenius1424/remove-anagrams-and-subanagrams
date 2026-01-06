@@ -1,0 +1,28 @@
+{
+  "testcases": [
+    {
+      "input": {
+        "words": ["abba", "baba", "bbaa", "cd", "cd"]
+      },
+      "expected": ["abba", "cd"]
+    },
+    {
+      "input": {
+        "words": ["a", "aa", "aaa"]
+      },
+      "expected": ["a", "aa", "aaa"]
+    },
+    {
+      "input": {
+        "words": []
+      },
+      "expected": []
+    },
+    {
+      "input": {
+        "words": ["abc"]
+      },
+      "expected": ["abc"]
+    }
+  ]
+}

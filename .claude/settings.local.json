@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(gradle wrapper:*)",
+      "Bash(python:*)",
+      "Bash(python3:*)",
+      "Bash(cargo test)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
