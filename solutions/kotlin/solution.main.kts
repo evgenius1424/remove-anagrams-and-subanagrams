@@ -1,5 +1,7 @@
 #!/usr/bin/env kotlin
 
+@file:DependsOn("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+
 import java.io.File
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*

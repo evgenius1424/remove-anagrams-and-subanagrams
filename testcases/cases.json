@@ -1,186 +1,184 @@
 {
+  "metadata": {
+    "problem": "Remove Anagrams and Sub-Anagrams",
+    "version": "1.0.0",
+    "total_cases": 25
+  },
   "test_cases": [
     {
       "id": 1,
       "category": "basic",
       "input": ["a", "ab", "ba", "abc", "abcd"],
       "expected": ["abcd"],
-      "explanation": "ab and ba are anagrams so both removed. a is dominated by ab. abc is dominated by abcd. Only abcd remains."
+      "explanation": "ab/ba are anagrams (both removed), a/abc are sub-anagrams of abcd"
     },
     {
       "id": 2,
       "category": "basic",
-      "input": ["abc", "def", "ghi"],
-      "expected": ["abc", "def", "ghi"],
-      "explanation": "No anagrams or dominance relationships, all words remain."
+      "input": ["cat", "dog", "bird"],
+      "expected": ["cat", "dog", "bird"],
+      "explanation": "No anagrams or sub-anagrams exist"
     },
     {
       "id": 3,
       "category": "basic",
-      "input": ["a", "aa", "aaa"],
-      "expected": ["aaa"],
-      "explanation": "Chain of dominance: a < aa < aaa. Only aaa survives."
+      "input": ["abc", "def", "cba", "fed", "xyz"],
+      "expected": ["xyz"],
+      "explanation": "abc/cba and def/fed are anagram pairs, only xyz remains"
     },
     {
       "id": 4,
       "category": "basic",
-      "input": ["cat", "act", "dog"],
-      "expected": ["dog"],
-      "explanation": "cat and act are anagrams, so both removed. Only dog remains."
+      "input": ["aaa", "aa", "a", "aaaa"],
+      "expected": ["aaaa"],
+      "explanation": "All shorter words are sub-anagrams of aaaa"
     },
     {
       "id": 5,
       "category": "basic",
-      "input": ["listen", "silent", "enlist"],
-      "expected": [],
-      "explanation": "All three words are anagrams of each other, so all are removed."
+      "input": ["ab", "cd", "abcd"],
+      "expected": ["abcd"],
+      "explanation": "Both ab and cd are sub-anagrams of abcd"
     },
     {
       "id": 6,
       "category": "edge",
       "input": [],
       "expected": [],
-      "explanation": "Empty input returns empty output."
+      "explanation": "Empty input"
     },
     {
       "id": 7,
       "category": "edge",
-      "input": ["single"],
-      "expected": ["single"],
-      "explanation": "Single word has no anagrams or dominators."
+      "input": ["a"],
+      "expected": ["a"],
+      "explanation": "Single word, no comparisons needed"
     },
     {
       "id": 8,
       "category": "edge",
-      "input": ["same", "same", "same"],
+      "input": ["a", "a"],
       "expected": [],
-      "explanation": "Identical words are anagrams, all removed."
+      "explanation": "Identical words are anagrams of each other"
     },
     {
       "id": 9,
       "category": "edge",
-      "input": ["a"],
-      "expected": ["a"],
-      "explanation": "Single character word remains."
+      "input": ["ab", "ba"],
+      "expected": [],
+      "explanation": "Two anagrams, both removed"
     },
     {
       "id": 10,
       "category": "edge",
-      "input": ["abcdefghijklmnop", "ponmlkjihgfedcba"],
+      "input": ["abc", "abc", "abc"],
       "expected": [],
-      "explanation": "Long anagrams (16 chars each) are removed."
+      "explanation": "Multiple identical words are anagrams"
     },
     {
       "id": 11,
       "category": "edge",
-      "input": ["z", "zz", "zzz"],
-      "expected": ["zzz"],
-      "explanation": "Dominance chain with last letter of alphabet."
+      "input": ["z"],
+      "expected": ["z"],
+      "explanation": "Single character at end of alphabet"
     },
     {
       "id": 12,
       "category": "edge",
-      "input": ["abc", "bca", "cab", "acb", "bac", "cba"],
-      "expected": [],
-      "explanation": "All 6 permutations of abc are anagrams, all removed."
+      "input": ["abcdefghijklmnop"],
+      "expected": ["abcdefghijklmnop"],
+      "explanation": "Long word, max length boundary"
     },
     {
       "id": 13,
-      "category": "anagram",
-      "input": ["rat", "tar", "art", "hello"],
-      "expected": ["hello"],
-      "explanation": "rat, tar, art are all anagrams, removed. hello survives."
-    },
-    {
-      "id": 14,
-      "category": "anagram",
-      "input": ["ab", "ba", "cd", "dc"],
-      "expected": [],
-      "explanation": "Two pairs of anagrams, all removed."
-    },
-    {
-      "id": 15,
-      "category": "anagram",
-      "input": ["god", "dog", "good"],
-      "expected": ["good"],
-      "explanation": "god and dog are anagrams (removed), good survives."
-    },
-    {
-      "id": 16,
-      "category": "anagram",
-      "input": ["peek", "keep", "helper"],
-      "expected": ["helper"],
-      "explanation": "peek and keep are anagrams (removed), helper survives."
-    },
-    {
-      "id": 17,
-      "category": "anagram",
-      "input": ["stressed", "desserts", "masters", "stream"],
-      "expected": ["masters"],
-      "explanation": "stressed and desserts are anagrams (removed), stream is dominated by masters."
-    },
-    {
-      "id": 18,
       "category": "sub_anagram",
       "input": ["a", "ab", "abc", "abcd", "abcde"],
       "expected": ["abcde"],
-      "explanation": "Pure dominance chain: each word dominates all previous ones."
+      "explanation": "Chain of sub-anagrams, only longest survives"
+    },
+    {
+      "id": 14,
+      "category": "sub_anagram",
+      "input": ["xy", "xyz", "wxyz"],
+      "expected": ["wxyz"],
+      "explanation": "Different letter chain"
+    },
+    {
+      "id": 15,
+      "category": "sub_anagram",
+      "input": ["aab", "ab", "a"],
+      "expected": ["aab"],
+      "explanation": "Frequency matters: aab has 2 a's"
+    },
+    {
+      "id": 16,
+      "category": "sub_anagram",
+      "input": ["aabb", "ab", "aab", "abb"],
+      "expected": ["aabb"],
+      "explanation": "Multiple sub-anagrams with different frequencies"
+    },
+    {
+      "id": 17,
+      "category": "mixed",
+      "input": ["eat", "tea", "ate", "eating", "beating"],
+      "expected": ["beating"],
+      "explanation": "eat/tea/ate are anagrams, eating is sub of beating"
+    },
+    {
+      "id": 18,
+      "category": "mixed",
+      "input": ["listen", "silent", "enlist", "google", "elgoog"],
+      "expected": [],
+      "explanation": "Two groups of anagrams, all removed"
     },
     {
       "id": 19,
-      "category": "sub_anagram",
-      "input": ["bc", "abc", "ab", "a"],
-      "expected": ["abc"],
-      "explanation": "abc dominates ab and a. bc is not dominated by abc (different letters)."
+      "category": "independent",
+      "input": ["abc", "def", "ghi", "jkl"],
+      "expected": ["abc", "def", "ghi", "jkl"],
+      "explanation": "Completely independent words, all kept"
     },
     {
       "id": 20,
-      "category": "sub_anagram",
-      "input": ["hello", "hell", "he", "h"],
-      "expected": ["hello"],
-      "explanation": "Dominance chain with repeated letters."
+      "category": "independent",
+      "input": ["xyz", "pqr", "mno"],
+      "expected": ["xyz", "pqr", "mno"],
+      "explanation": "No overlap in letters at all"
     },
     {
       "id": 21,
-      "category": "sub_anagram",
-      "input": ["aab", "ab", "aaab", "a"],
-      "expected": ["aaab"],
-      "explanation": "Complex dominance: aaab dominates aab, aab dominates ab and a."
+      "category": "tricky",
+      "input": ["ab", "bc", "abc"],
+      "expected": ["abc"],
+      "explanation": "ab and bc are both sub-anagrams of abc"
     },
     {
       "id": 22,
-      "category": "mixed",
-      "input": ["abc", "bca", "ab", "ba", "a"],
-      "expected": [],
-      "explanation": "abc and bca are anagrams (removed), ab and ba are anagrams (removed), a is dominated by ab."
+      "category": "tricky",
+      "input": ["ab", "bc", "cd"],
+      "expected": ["ab", "bc", "cd"],
+      "explanation": "Overlapping letters but no domination"
     },
     {
       "id": 23,
-      "category": "mixed",
-      "input": ["cat", "tac", "ca", "dog", "god", "do"],
+      "category": "tricky",
+      "input": ["aabb", "bbaa", "abab", "baba"],
       "expected": [],
-      "explanation": "All words have anagrams or are dominated: cat/tac anagrams, dog/god anagrams, ca/do dominated by their anagrams."
+      "explanation": "All four are anagrams of each other"
     },
     {
       "id": 24,
-      "category": "mixed",
-      "input": ["hello", "world", "hell", "word", "he"],
-      "expected": ["hello", "world"],
-      "explanation": "hello dominates hell and he. world dominates word. No anagrams."
+      "category": "tricky",
+      "input": ["abc", "abd", "acd", "bcd", "abcd"],
+      "expected": ["abcd"],
+      "explanation": "Four 3-letter words all dominated by abcd"
     },
     {
       "id": 25,
-      "category": "mixed",
-      "input": ["abc", "def", "ab", "de", "fed"],
-      "expected": ["abc"],
-      "explanation": "abc dominates ab. def and fed are anagrams (both removed), de is dominated by def."
-    },
-    {
-      "id": 26,
-      "category": "edge",
-      "input": ["", "a"],
-      "expected": ["a"],
-      "explanation": "Empty string is dominated by any non-empty string."
+      "category": "tricky",
+      "input": ["ab", "cd", "ef", "abcdef"],
+      "expected": ["abcdef"],
+      "explanation": "Three independent pairs all dominated by one word"
     }
   ]
 }
