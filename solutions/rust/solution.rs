@@ -6,18 +6,13 @@ use std::path::Path;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct TestCase {
-    input: Input,
+    input: Vec<String>,
     expected: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-struct Input {
-    words: Vec<String>,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
 struct TestData {
-    testcases: Vec<TestCase>,
+    test_cases: Vec<TestCase>,
 }
 
 fn remove_anagrams(words: Vec<String>) -> Vec<String> {
@@ -43,13 +38,13 @@ fn main() {
     };
 
     // Run test cases
-    for (i, test_case) in test_data.testcases.iter().enumerate() {
-        let result = remove_anagrams(test_case.input.words.clone());
+    for (i, test_case) in test_data.test_cases.iter().enumerate() {
+        let result = remove_anagrams(test_case.input.clone());
         let passed = result == test_case.expected;
 
         println!("Test case {}: {}", i + 1, if passed { "PASS" } else { "FAIL" });
         if !passed {
-            println!("  Input: {:?}", test_case.input.words);
+            println!("  Input: {:?}", test_case.input);
             println!("  Expected: {:?}", test_case.expected);
             println!("  Got: {:?}", result);
         }

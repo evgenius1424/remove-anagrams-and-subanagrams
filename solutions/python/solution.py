@@ -22,14 +22,14 @@ def main():
         return
 
     # Run test cases
-    for i, test_case in enumerate(test_data["testcases"]):
-        result = remove_anagrams(test_case["input"]["words"])
+    for i, test_case in enumerate(test_data["test_cases"]):
+        result = remove_anagrams(test_case["input"])
         expected = test_case["expected"]
         passed = result == expected
 
         print(f"Test case {i + 1}: {'PASS' if passed else 'FAIL'}")
         if not passed:
-            print(f"  Input: {test_case['input']['words']}")
+            print(f"  Input: {test_case['input']}")
             print(f"  Expected: {expected}")
             print(f"  Got: {result}")
 

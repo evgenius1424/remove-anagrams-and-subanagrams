@@ -1,7 +1,7 @@
 # Remove Anagrams and Sub-Anagrams
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![Languages](https://img.shields.io/badge/Languages-Kotlin%20%7C%20Python%20%7C%20Rust%20%7C%20Java-blue)
+![Languages](https://img.shields.io/badge/Languages-Kotlin%20%7C%20Python%20%7C%20Rust-blue)
 
 A collection of optimized algorithms to solve the "Remove Anagrams and Sub-Anagrams" problem with detailed explanations and implementations in multiple programming languages.
 
@@ -118,15 +118,6 @@ cargo test
 cargo run
 ```
 
-### Java
-```bash
-# Run individual solutions
-cd solutions/java
-javac Solution01BruteForce.java && java Solution01BruteForce
-javac Solution02Pairwise.java && java Solution02Pairwise
-javac Solution03Bitset.java && java Solution03Bitset
-```
-
 ## How to Run Tests
 
 All solutions include comprehensive test suites using the test cases from `testcases/cases.json`:
@@ -193,7 +184,6 @@ remove-anagrams-and-subanagrams/
 │   ├── kotlin/                 # Kotlin implementations
 │   ├── python/                 # Python implementations
 │   ├── rust/                   # Rust implementations
-│   └── java/                   # Java implementations
 ├── visualizations/
 │   ├── BITSET_EXPLAINED.md     # Visual explanation of bitset approach
 │   └── diagrams/               # Algorithm flow diagrams

@@ -8,18 +8,16 @@ import kotlinx.serialization.json.*
 
 @Serializable
 data class TestCase(
-    val input: Input,
-    val expected: List<String>
-)
-
-@Serializable
-data class Input(
-    val words: List<String>
+    val id: Int,
+    val category: String,
+    val input: List<String>,
+    val expected: List<String>,
+    val explanation: String
 )
 
 @Serializable
 data class TestData(
-    val testcases: List<TestCase>
+    val test_cases: List<TestCase>
 )
 
 fun removeAnagrams(words: Array<String>): List<String> {
@@ -38,13 +36,13 @@ fun main() {
     }
 
     // Run test cases
-    testData.testcases.forEachIndexed { index, testCase ->
-        val result = removeAnagrams(testCase.input.words.toTypedArray())
+    testData.test_cases.forEachIndexed { index, testCase ->
+        val result = removeAnagrams(testCase.input.toTypedArray())
         val passed = result == testCase.expected
 
         println("Test case ${index + 1}: ${if (passed) "PASS" else "FAIL"}")
         if (!passed) {
-            println("  Input: ${testCase.input.words}")
+            println("  Input: ${testCase.input}")
             println("  Expected: ${testCase.expected}")
             println("  Got: $result")
         }
