@@ -1,153 +1,119 @@
 #!/usr/bin/env python3
-"""
-Remove Anagrams and Sub-Anagrams - Frequency Vectors + Pairwise
-Time: O(g² · 26), Space: O(g · 26)
-Run: python solution_02_pairwise.py
-"""
 
-import json
-from typing import List, Tuple
-from pathlib import Path
-from collections import Counter, defaultdict
+ALPHABET = 26
 
-
-def get_frequency_vector(word: str) -> Tuple[int, ...]:
-    """Get frequency vector for a word."""
-    freq = [0] * 26
-    for char in word:
-        freq[ord(char) - ord('a')] += 1
-    return tuple(freq)
-
-
-def is_dominated_by(smaller: Tuple[int, ...], larger: Tuple[int, ...]) -> bool:
-    """Check if smaller frequency vector is dominated by larger."""
-    smaller_sum = sum(smaller)
-    larger_sum = sum(larger)
-
-    if smaller_sum >= larger_sum:
-        return False
-
-    for i in range(26):
-        if smaller[i] > larger[i]:
-            return False
-
-    return True
-
-
-def remove_anagrams_and_sub_anagrams_pairwise(words: List[str]) -> List[str]:
-    """Remove anagrams and sub-anagrams using frequency vectors and pairwise comparison."""
+def remove_anagrams_and_sub_anagrams(words: list[str]) -> list[str]:
     if not words:
         return []
 
-    # Group words by frequency vector
-    grouped_by_freq = defaultdict(list)
+    groups = {}
     for word in words:
-        freq = get_frequency_vector(word)
-        grouped_by_freq[tuple(freq)].append(word)
+        key = tuple(freq_vector(word))
+        groups.setdefault(key, []).append(word)
 
-    # Keep only groups with single words (no anagrams)
-    unique_groups = []
-    for freq, word_list in grouped_by_freq.items():
-        if len(word_list) == 1:
-            unique_groups.append((list(freq), word_list[0]))
+    unique_groups = {k: v for k, v in groups.items() if len(v) == 1}
 
-    # Find maximal (non-dominated) frequency vectors
-    maximal_groups = []
-    for candidate in unique_groups:
-        candidate_freq, candidate_word = candidate
-        is_dominated = False
+    if not unique_groups:
+        return []
 
-        for other in unique_groups:
-            other_freq, other_word = other
-            if candidate != other and is_dominated_by(candidate_freq, other_freq):
-                is_dominated = True
-                break
+    vecs = list(unique_groups.keys())
 
-        if not is_dominated:
-            maximal_groups.append(candidate_word)
+    maximal = [candidate for candidate in vecs
+               if not any(dominates(other, candidate) for other in vecs)]
 
-    return maximal_groups
+    return [unique_groups[vec][0] for vec in maximal]
 
 
-def load_test_cases():
-    """Load test cases from JSON file or return embedded cases."""
-    try:
-        test_file = Path(__file__).parent.parent.parent / "testcases" / "cases.json"
-        with open(test_file, 'r') as f:
-            data = json.load(f)
-            return data['test_cases']
-    except (FileNotFoundError, KeyError, json.JSONDecodeError):
-        print("Could not load test cases from JSON, using embedded cases")
-        return [
-            {
-                "id": 1,
-                "category": "basic",
-                "input": ["a", "ab", "ba", "abc", "abcd"],
-                "expected": ["abcd"],
-                "explanation": ""
-            },
-            {
-                "id": 2,
-                "category": "basic",
-                "input": ["abc", "def", "ghi"],
-                "expected": ["abc", "def", "ghi"],
-                "explanation": ""
-            },
-            {
-                "id": 3,
-                "category": "basic",
-                "input": ["a", "aa", "aaa"],
-                "expected": ["aaa"],
-                "explanation": ""
-            },
-            {
-                "id": 4,
-                "category": "basic",
-                "input": ["cat", "act", "dog"],
-                "expected": ["dog"],
-                "explanation": ""
-            },
-            {
-                "id": 5,
-                "category": "basic",
-                "input": ["listen", "silent", "enlist"],
-                "expected": [],
-                "explanation": ""
-            }
-        ]
+def freq_vector(word: str) -> list[int]:
+    f = [0] * ALPHABET
+    for c in word:
+        if 'a' <= c <= 'z':
+            f[ord(c) - ord('a')] += 1
+    return f
+
+
+def dominates(a: tuple[int, ...], b: tuple[int, ...]) -> bool:
+    if a is b:
+        return False
+    if a == b:
+        return False
+
+    dominated = True
+    strict = False
+
+    for i in range(ALPHABET):
+        if a[i] < b[i]:
+            dominated = False
+            break
+        if a[i] > b[i]:
+            strict = True
+
+    return dominated and strict
+
+
+class TestCase:
+    def __init__(self, id: int, category: str, input: list[str], expected: set[str], explanation: str):
+        self.id = id
+        self.category = category
+        self.input = input
+        self.expected = expected
+        self.explanation = explanation
+
+
+test_cases = [
+    TestCase(1, "basic", ["a", "ab", "ba", "abc", "abcd"], {"abcd"}, "chain with anagrams"),
+    TestCase(2, "basic", ["cat", "dog", "bird"], {"cat", "dog", "bird"}, "no anagrams"),
+    TestCase(3, "basic", ["abc", "def", "cba", "fed", "xyz"], {"xyz"}, "multiple anagram pairs"),
+    TestCase(4, "basic", ["aaa", "aa", "a", "aaaa"], {"aaaa"}, "same letter chain"),
+    TestCase(5, "basic", ["ab", "cd", "abcd"], {"abcd"}, "two sub-anagrams"),
+    TestCase(6, "edge", [], set(), "empty input"),
+    TestCase(7, "edge", ["a"], {"a"}, "single word"),
+    TestCase(8, "edge", ["ab", "ba"], set(), "two anagrams"),
+    TestCase(9, "edge", ["aabb", "bbaa", "abab"], set(), "three anagrams"),
+    TestCase(10, "edge", ["ab", "bc", "cd"], {"ab", "bc", "cd"}, "overlapping independent"),
+    TestCase(11, "sub_anagram", ["ab", "bc", "abc"], {"abc"}, "partial overlaps dominated"),
+    TestCase(12, "sub_anagram", ["a", "ab", "abc", "abcd", "abcde"], {"abcde"}, "long chain"),
+    TestCase(13, "sub_anagram", ["xy", "xyz", "wxyz"], {"wxyz"}, "different letters"),
+    TestCase(14, "sub_anagram", ["aab", "ab", "a"], {"aab"}, "frequency matters"),
+    TestCase(15, "mixed", ["eat", "tea", "ate", "eating"], {"eating"}, "anagrams + sub"),
+    TestCase(16, "mixed", ["listen", "silent", "enlist"], set(), "all anagrams"),
+    TestCase(17, "mixed", ["abc", "abd", "acd", "bcd", "abcd"], {"abcd"}, "four dominated by one"),
+    TestCase(18, "tricky", ["ab", "cd", "ef", "abcdef"], {"abcdef"}, "three pairs dominated"),
+    TestCase(19, "tricky", ["aabb", "ab"], {"aabb"}, "aabb dominates ab"),
+    TestCase(20, "tricky", ["abc", "def", "ghi"], {"abc", "def", "ghi"}, "independent same length"),
+]
 
 
 def main():
-    print("Python Solution 2: Frequency Vectors + Pairwise")
+    print("Python Solution 2: Frequency Vector + Pairwise")
     print("Time: O(g² · 26), Space: O(g · 26)")
     print("Run: python solution_02_pairwise.py")
     print()
-
-    test_cases = load_test_cases()
-    passed = 0
-    failed = 0
-
     print(f"Running {len(test_cases)} tests...")
     print()
 
-    for test_case in test_cases:
-        result = remove_anagrams_and_sub_anagrams_pairwise(test_case['input'])
-        result_sorted = sorted(result)
-        expected_sorted = sorted(test_case['expected'])
+    passed = 0
+    failed = 0
 
-        if result_sorted == expected_sorted:
-            print(f"✓ Test {test_case['id']}: {test_case['category']}")
+    for tc in test_cases:
+        result = set(remove_anagrams_and_sub_anagrams(tc.input))
+        success = result == tc.expected
+
+        if success:
+            print(f"✓ Test {tc.id}: {tc.category} - {tc.explanation}")
             passed += 1
         else:
-            print(f"✗ Test {test_case['id']}: {test_case['category']}")
-            print(f"  Input: {test_case['input']}")
-            print(f"  Expected: {test_case['expected']}")
-            print(f"  Got: {result}")
+            print(f"✗ Test {tc.id}: {tc.category} - {tc.explanation}")
+            print(f"  Input:    {tc.input}")
+            print(f"  Expected: {tc.expected}")
+            print(f"  Got:      {result}")
             failed += 1
 
     print()
     print("========================================")
     print(f"Results: {passed} passed, {failed} failed")
+    if failed == 0:
+        print("All tests passed! ✓")
 
 
 if __name__ == "__main__":
