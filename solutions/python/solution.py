@@ -5,7 +5,7 @@ import sys
 from typing import List
 from pathlib import Path
 
-def remove_anagrams(words: List[str]) -> List[str]:
+def remove_anagrams_and_sub_anagrams(words: list[str]) -> list[str]:
     """
     TODO: Implement the solution
     """
@@ -23,7 +23,7 @@ def main():
 
     # Run test cases
     for i, test_case in enumerate(test_data["test_cases"]):
-        result = remove_anagrams(test_case["input"])
+        result = remove_anagrams_and_sub_anagrams(test_case["input"])
         expected = test_case["expected"]
         passed = result == expected
 

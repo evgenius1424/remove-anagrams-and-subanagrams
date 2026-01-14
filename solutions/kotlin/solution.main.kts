@@ -1,24 +1,6 @@
 #!/usr/bin/env kotlin
 
-@file:DependsOn("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
-
-import java.io.File
-import kotlinx.serialization.*
-import kotlinx.serialization.json.*
-
-@Serializable
-data class TestCase(
-    val id: Int,
-    val category: String,
-    val input: List<String>,
-    val expected: List<String>,
-    val explanation: String
-)
-
-@Serializable
-data class TestData(
-    val test_cases: List<TestCase>
-)
+@file:Import("TestCases.kts")
 
 fun removeAnagrams(words: Array<String>): List<String> {
     // TODO: Implement the solution
@@ -26,17 +8,14 @@ fun removeAnagrams(words: Array<String>): List<String> {
 }
 
 fun main() {
-    // Read test cases from shared file
-    val testData = try {
-        val jsonString = File("../../testcases/cases.json").readText()
-        Json.decodeFromString<TestData>(jsonString)
+    val testCases = try {
+        loadTestCases()
     } catch (e: Exception) {
         println("Error reading test cases: ${e.message}")
         return
     }
 
-    // Run test cases
-    testData.test_cases.forEachIndexed { index, testCase ->
+    testCases.forEachIndexed { index, testCase ->
         val result = removeAnagrams(testCase.input.toTypedArray())
         val passed = result == testCase.expected
 
