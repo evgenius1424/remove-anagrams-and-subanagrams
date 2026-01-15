@@ -179,6 +179,55 @@
       "input": ["ab", "cd", "ef", "abcdef"],
       "expected": ["abcdef"],
       "explanation": "Three independent pairs all dominated by one word"
+    },
+    {
+      "id": 26,
+      "category": "tricky",
+      "input": ["aab", "abb"],
+      "expected": ["aab", "abb"],
+      "explanation": "Partial letter overlap but neither dominates the other"
+    },
+    {
+      "id": 27,
+      "category": "tricky",
+      "input": ["abc", "abc", "ab"],
+      "expected": ["ab"],
+      "explanation": "Duplicate 'abc' removed as anagrams, 'ab' survives since nothing remains to dominate it"
+    },
+    {
+      "id": 28,
+      "category": "tricky",
+      "input": ["abc", "abd", "abe"],
+      "expected": ["abc", "abd", "abe"],
+      "explanation": "Same length, share 'ab' prefix, but none are anagrams"
+    },
+    {
+      "id": 29,
+      "category": "tricky",
+      "input": ["ab", "cd", "ac", "bd"],
+      "expected": ["ab", "cd", "ac", "bd"],
+      "explanation": "Four words with pairwise letter overlap, no domination"
+    },
+    {
+      "id": 30,
+      "category": "edge",
+      "input": ["aaaaaaaaaaaaaaaa", "a"],
+      "expected": ["aaaaaaaaaaaaaaaa"],
+      "explanation": "High frequency count (16 a's), tests implementation limits"
+    },
+    {
+      "id": 31,
+      "category": "tricky",
+      "input": ["ab", "bc", "ca"],
+      "expected": ["ab", "bc", "ca"],
+      "explanation": "Cyclic letter overlap, no domination relationship"
+    },
+    {
+      "id": 32,
+      "category": "mixed",
+      "input": ["abc", "bca", "xyz", "ab"],
+      "expected": ["xyz", "ab"],
+      "explanation": "Anagram pair (abc/bca) removed first, then 'ab' has no dominator among survivors"
     }
   ]
 }

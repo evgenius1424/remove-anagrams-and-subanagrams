@@ -22,6 +22,48 @@ data class TestCaseFile(
     val testCases: List<TestCase>
 )
 
+private val SOLUTIONS = listOf(
+    "BruteForce" to ::bruteForceRemove,
+    "Pairwise" to ::pairwiseRemove,
+    "Bitset" to ::bitsetRemove
+)
+
+fun main() {
+    val testCases = loadTestCases()
+    val totalFailed = SOLUTIONS.sumOf { (name, solver) -> runSolution(name, solver, testCases) }
+    if (totalFailed > 0) exitProcess(1)
+}
+
+private fun runSolution(name: String, solver: (List<String>) -> List<String>, testCases: List<TestCase>): Int {
+    println("Running ${testCases.size} Kotlin tests for $name...")
+    var failed = 0
+
+    for (tc in testCases) {
+        val result = solver(tc.input).toSet()
+        val expected = tc.expected.toSet()
+
+        if (result == expected) {
+            println("OK   Test ${tc.id}: ${tc.category} - ${tc.explanation}")
+        } else {
+            println("FAIL Test ${tc.id}: ${tc.category} - ${tc.explanation}")
+            println("  Input:    ${tc.input}")
+            println("  Expected: $expected")
+            println("  Got:      $result")
+            failed++
+        }
+    }
+
+    val passed = testCases.size - failed
+    println("Results for $name: $passed passed, $failed failed\n")
+    return failed
+}
+
+private fun loadTestCases(): List<TestCase> {
+    val casesFile = findCasesFile()
+    val json = Json { ignoreUnknownKeys = true }
+    return json.decodeFromString<TestCaseFile>(casesFile.readText()).testCases
+}
+
 private fun findCasesFile(): File {
     val cwd = File(System.getProperty("user.dir"))
     val candidates = listOf(
@@ -29,56 +71,6 @@ private fun findCasesFile(): File {
         File(cwd, "../testcases/cases.json"),
         File(cwd, "../../testcases/cases.json")
     )
-
-    return candidates.firstOrNull { it.exists() } ?: run {
-        val tried = candidates.joinToString { it.absolutePath }
-        throw RuntimeException("Test cases file not found. Tried: $tried")
-    }
-}
-
-private fun loadTestCases(): List<TestCase> {
-    val casesFile = findCasesFile()
-    val json = Json { ignoreUnknownKeys = true }
-    val parsed = json.decodeFromString<TestCaseFile>(casesFile.readText())
-    return parsed.testCases
-}
-
-fun main() {
-    val testCases = loadTestCases()
-    val solutions = listOf(
-        "BruteForce" to ::bruteForceRemove,
-        "Pairwise" to ::pairwiseRemove,
-        "Bitset" to ::bitsetRemove
-    )
-
-    var totalFailed = 0
-    for ((name, solver) in solutions) {
-        println("Running ${testCases.size} Kotlin tests for $name...")
-        var passed = 0
-        var failed = 0
-
-        for (tc in testCases) {
-            val result = solver(tc.input).toSet()
-            val expected = tc.expected.toSet()
-            val success = result == expected
-
-            if (success) {
-                println("OK  Test ${tc.id}: ${tc.category} - ${tc.explanation}")
-                passed++
-            } else {
-                println("FAIL Test ${tc.id}: ${tc.category} - ${tc.explanation}")
-                println("  Input:    ${tc.input}")
-                println("  Expected: $expected")
-                println("  Got:      $result")
-                failed++
-            }
-        }
-
-        println("Results for $name: $passed passed, $failed failed")
-        totalFailed += failed
-    }
-
-    if (totalFailed > 0) {
-        exitProcess(1)
-    }
+    return candidates.firstOrNull { it.exists() }
+        ?: error("Test cases file not found. Tried: ${candidates.joinToString { it.absolutePath }}")
 }

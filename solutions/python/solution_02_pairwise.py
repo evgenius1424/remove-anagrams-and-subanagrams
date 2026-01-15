@@ -1,51 +1,34 @@
 ALPHABET = 26
 
+
 def removeAnagramsAndSubAnagrams(words: list[str]) -> list[str]:
     if not words:
         return []
 
-    groups = {}
+    groups: dict[tuple[int, ...], list[str]] = {}
     for word in words:
         key = tuple(freq_vector(word))
         groups.setdefault(key, []).append(word)
 
-    unique_groups = {k: v for k, v in groups.items() if len(v) == 1}
-
-    if not unique_groups:
+    unique = {k: v[0] for k, v in groups.items() if len(v) == 1}
+    if not unique:
         return []
 
-    vecs = list(unique_groups.keys())
-
-    maximal = [candidate for candidate in vecs
-               if not any(dominates(other, candidate) for other in vecs)]
-
-    return [unique_groups[vec][0] for vec in maximal]
+    vecs = list(unique.keys())
+    return [
+        unique[vec] for vec in vecs
+        if not any(dominates(other, vec) for other in vecs)
+    ]
 
 
 def freq_vector(word: str) -> list[int]:
-    f = [0] * ALPHABET
+    freq = [0] * ALPHABET
     for c in word:
-        if 'a' <= c <= 'z':
-            f[ord(c) - ord('a')] += 1
-    return f
+        freq[ord(c) - ord('a')] += 1
+    return freq
 
 
 def dominates(a: tuple[int, ...], b: tuple[int, ...]) -> bool:
-    if a is b:
-        return False
     if a == b:
         return False
-
-    dominated = True
-    strict = False
-
-    for i in range(ALPHABET):
-        if a[i] < b[i]:
-            dominated = False
-            break
-        if a[i] > b[i]:
-            strict = True
-
-    return dominated and strict
-
-
+    return all(a[i] >= b[i] for i in range(ALPHABET))

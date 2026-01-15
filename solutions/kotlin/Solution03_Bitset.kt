@@ -1,22 +1,23 @@
 package bitset
 
 private const val ALPHABET = 26
-private const val MAX_FREQ = 17
 
 fun removeAnagramsAndSubAnagrams(words: List<String>): List<String> {
     if (words.isEmpty()) return emptyList()
 
-    val groups = words.groupBy { freqVector(it).toList() }
-    val uniqueGroups = groups.filter { it.value.size == 1 }
+    val unique = words
+        .groupBy { freqVector(it).toList() }
+        .filterValues { it.size == 1 }
 
-    if (uniqueGroups.isEmpty()) return emptyList()
+    if (unique.isEmpty()) return emptyList()
 
-    val vecs = uniqueGroups.keys
+    val vecs = unique.keys
         .map { it.toIntArray() }
         .sortedByDescending { it.sum() }
 
+    val maxFreq = vecs.maxOf { it.max() } + 1
+    val bitsets = Array(ALPHABET) { Array(maxFreq) { mutableListOf<Long>() } }
     val maximal = mutableListOf<IntArray>()
-    val bitsets = Array(ALPHABET) { Array(MAX_FREQ) { mutableListOf<Long>() } }
 
     for (vec in vecs) {
         if (isDominated(vec, maximal.size, bitsets)) continue
@@ -24,29 +25,23 @@ fun removeAnagramsAndSubAnagrams(words: List<String>): List<String> {
         maximal.add(vec)
     }
 
-    return maximal.map { uniqueGroups[it.toList()]!!.first() }
+    return maximal.map { unique[it.toList()]!!.first() }
 }
 
 private fun freqVector(word: String): IntArray {
     val freq = IntArray(ALPHABET)
-    for (c in word) {
-        if (c in 'a'..'z') freq[c - 'a']++
-    }
+    for (c in word) freq[c - 'a']++
     return freq
 }
 
-private fun isDominated(
-    vec: IntArray,
-    count: Int,
-    bitsets: Array<Array<MutableList<Long>>>
-): Boolean {
+private fun isDominated(vec: IntArray, count: Int, bitsets: Array<Array<MutableList<Long>>>): Boolean {
     if (count == 0) return false
 
     val blocks = (count + 63) / 64
     val mask = LongArray(blocks) { -1L }
-    val lastBlockBits = count % 64
-    if (lastBlockBits != 0) {
-        mask[blocks - 1] = (1L shl lastBlockBits) - 1
+    val lastBits = count % 64
+    if (lastBits != 0) {
+        mask[blocks - 1] = (1L shl lastBits) - 1
     }
 
     for (letter in 0 until ALPHABET) {
@@ -57,12 +52,10 @@ private fun isDominated(
         if (bs.isEmpty()) return false
 
         for (j in mask.indices) {
-            mask[j] = mask[j] and (bs.getOrElse(j) { 0L })
+            mask[j] = mask[j] and bs.getOrElse(j) { 0L }
         }
-
         if (mask.all { it == 0L }) return false
     }
-
     return true
 }
 
