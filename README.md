@@ -94,25 +94,30 @@ Explanation:
 
 ## Quick Start
 
-### Kotlin
+This repo uses `just` to keep solution and test management consistent.
+
 ```bash
-# Run individual solutions
-kotlin solutions/kotlin/Solution01_BruteForce.main.kts
-kotlin solutions/kotlin/Solution02_Pairwise.main.kts
-kotlin solutions/kotlin/Solution03_Bitset.main.kts
+# List available recipes
+just
+
+# Run tests for a single language
+just test-python
+just test-kotlin
+
+# Run all language tests
+just test-all
 ```
 
-### Python
-```bash
-# Run individual solutions
-python solutions/python/solution_01_brute_force.py
-python solutions/python/solution_02_pairwise.py
-python solutions/python/solution_03_bitset.py
-```
+Note: `just test-kotlin` uses the Gradle wrapper and will download the Kotlin
+serialization dependency on first run.
 
 ## How to Run Tests
 
-All solutions include comprehensive test suites using the test cases from `testcases/cases.json`:
+Each language has:
+- A solution file with a single function
+- A separate test runner that loads `testcases/cases.json`
+
+The test suite includes:
 
 1. **26 carefully crafted test cases** covering edge cases, anagrams, sub-anagrams, and mixed scenarios
 2. **Consistent output format** across all languages
@@ -125,6 +130,19 @@ All solutions include comprehensive test suites using the test cases from `testc
 - **Sub-anagram** (4 cases): Dominance relationships and chains
 - **Mixed** (4 cases): Combination of anagrams and dominance
 - **Additional edge case** (1 case): Empty string handling
+
+Solution entry points:
+- Python: `solutions/python/solution_01_brute_force.py` exposes `remove_anagrams_and_sub_anagrams`
+- Python: `solutions/python/solution_02_pairwise.py` exposes `remove_anagrams_and_sub_anagrams`
+- Python: `solutions/python/solution_03_bitset.py` exposes `remove_anagrams_and_sub_anagrams`
+- Kotlin: `solutions/kotlin/Solution01_BruteForce.kt` exposes `removeAnagramsAndSubAnagrams01`
+- Kotlin: `solutions/kotlin/Solution02_Pairwise.kt` exposes `removeAnagramsAndSubAnagrams02`
+- Kotlin: `solutions/kotlin/Solution03_Bitset.kt` exposes `removeAnagramsAndSubAnagrams03`
+
+Adding another language:
+- Create `solutions/<lang>/solution.<ext>` with a single function.
+- Add a test runner under `tests/<lang>/` that loads `testcases/cases.json`.
+- Add a `just test-<lang>` recipe in `Justfile`.
 
 ## Performance Comparison
 
@@ -166,14 +184,23 @@ Sample results on various input sizes:
 
 ```
 remove-anagrams-and-subanagrams/
+├── build.gradle.kts            # Kotlin test runner dependencies
+├── Justfile                     # Test orchestration via just
 ├── README.md                    # This file
+├── gradlew                      # Gradle wrapper (Unix)
+├── gradlew.bat                  # Gradle wrapper (Windows)
+├── gradle/                      # Gradle wrapper support files
+├── settings.gradle.kts          # Gradle settings for tests
 ├── LICENSE                      # MIT License
 ├── .gitignore                   # Git ignore rules
 ├── SOLUTION_GUIDE.md            # Detailed algorithm explanations
 ├── testcases/
 │   └── cases.json              # 26 comprehensive test cases
+├── tests/
+│   ├── kotlin/                 # Kotlin test runner
+│   └── python/                 # Python test runner
 ├── solutions/
-│   ├── kotlin/                 # Kotlin implementations
+│   ├── kotlin/                 # Kotlin implementations (1 file per solution)
 │   ├── python/                 # Python implementations
 ├── visualizations/
 │   ├── BITSET_EXPLAINED.md     # Visual explanation of bitset approach
