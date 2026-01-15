@@ -5,9 +5,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from solutions.python.solution_01_brute_force import remove_anagrams_and_sub_anagrams as solution01
-from solutions.python.solution_02_pairwise import remove_anagrams_and_sub_anagrams as solution02
-from solutions.python.solution_03_bitset import remove_anagrams_and_sub_anagrams as solution03
+from solutions.python.solution_01_brute_force import removeAnagramsAndSubAnagrams as solution01
+from solutions.python.solution_02_pairwise import removeAnagramsAndSubAnagrams as solution02
+from solutions.python.solution_03_bitset import removeAnagramsAndSubAnagrams as solution03
 
 
 def load_test_cases():

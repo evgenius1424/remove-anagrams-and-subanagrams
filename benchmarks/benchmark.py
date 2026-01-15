@@ -10,9 +10,9 @@ import sys
 sys.path.append(str(Path(__file__).parent.parent / "solutions" / "python"))
 
 try:
-    from solution_01_brute_force import remove_anagrams_and_sub_anagrams as brute_force
-    from solution_02_pairwise import remove_anagrams_and_sub_anagrams as pairwise
-    from solution_03_bitset import remove_anagrams_and_sub_anagrams as bitset
+    from solution_01_brute_force import removeAnagramsAndSubAnagrams as brute_force
+    from solution_02_pairwise import removeAnagramsAndSubAnagrams as pairwise
+    from solution_03_bitset import removeAnagramsAndSubAnagrams as bitset
 except ImportError as e:
     print(f"Error importing solutions: {e}")
     print("Make sure you're running this from the benchmarks directory")

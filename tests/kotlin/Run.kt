@@ -3,6 +3,9 @@ import kotlin.system.exitProcess
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import bruteforce.removeAnagramsAndSubAnagrams as bruteForceRemove
+import pairwise.removeAnagramsAndSubAnagrams as pairwiseRemove
+import bitset.removeAnagramsAndSubAnagrams as bitsetRemove
 
 @Serializable
 data class TestCase(
@@ -43,9 +46,9 @@ private fun loadTestCases(): List<TestCase> {
 fun main() {
     val testCases = loadTestCases()
     val solutions = listOf(
-        "solution01" to ::removeAnagramsAndSubAnagrams01,
-        "solution02" to ::removeAnagramsAndSubAnagrams02,
-        "solution03" to ::removeAnagramsAndSubAnagrams03
+        "BruteForce" to ::bruteForceRemove,
+        "Pairwise" to ::pairwiseRemove,
+        "Bitset" to ::bitsetRemove
     )
 
     var totalFailed = 0

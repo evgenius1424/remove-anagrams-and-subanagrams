@@ -1,12 +1,7 @@
-#!/usr/bin/env python3
-
-import json
-import os
-
 ALPHABET = 26
 MAX_FREQ = 17
 
-def remove_anagrams_and_sub_anagrams(words: list[str]) -> list[str]:
+def removeAnagramsAndSubAnagrams(words: list[str]) -> list[str]:
     if not words:
         return []
 
@@ -82,58 +77,3 @@ def add_to_bitsets(vec: tuple[int, ...], idx: int, bitsets: list[list[list[int]]
             bs[block] |= bit
 
 
-def load_test_cases():
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    cases_path = os.path.join(script_dir, "..", "..", "testcases", "cases.json")
-
-    with open(cases_path, 'r') as f:
-        data = json.load(f)
-
-    test_cases = []
-    for case in data['test_cases']:
-        test_cases.append({
-            'id': case['id'],
-            'category': case['category'],
-            'input': case['input'],
-            'expected': set(case['expected']),
-            'explanation': case['explanation']
-        })
-    return test_cases
-
-
-def main():
-    print("Python Solution 3: Bitset Indexing")
-    print("Time: O(g · 26 · L), Space: O(26 · L · g/64)")
-    print("Run: python solution_03_bitset.py")
-    print()
-
-    test_cases = load_test_cases()
-    print(f"Running {len(test_cases)} tests...")
-    print()
-
-    passed = 0
-    failed = 0
-
-    for tc in test_cases:
-        result = set(remove_anagrams_and_sub_anagrams(tc['input']))
-        success = result == tc['expected']
-
-        if success:
-            print(f"✓ Test {tc['id']}: {tc['category']} - {tc['explanation']}")
-            passed += 1
-        else:
-            print(f"✗ Test {tc['id']}: {tc['category']} - {tc['explanation']}")
-            print(f"  Input:    {tc['input']}")
-            print(f"  Expected: {tc['expected']}")
-            print(f"  Got:      {result}")
-            failed += 1
-
-    print()
-    print("========================================")
-    print(f"Results: {passed} passed, {failed} failed")
-    if failed == 0:
-        print("All tests passed! ✓")
-
-
-if __name__ == "__main__":
-    main()
